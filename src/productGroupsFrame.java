@@ -5,27 +5,24 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.File;
 
 public class productGroupsFrame extends JFrame {
     JFrame frame = new JFrame("Групи товарів"); JPanel panel = new JPanel();
     JButton add = new JButton("Додати групу"), edit = new JButton("Редагувати групу"), delete = new JButton("Видалити групу");
     JTable groupTable;
-    Object[][] groups = {
-            {1, "Продовольчі", "Товари, що призначені для споживання"},
-            {2, "Непродовольчі", "Товари, що не призначені для споживання"},
-            {3, "Помідор", "Товари, що не призначені для споживання"},
-            {4, "Помідор", "Товари, що не призначені для споживання"},
-            {5, "Помідор", "Товари, що не призначені для споживання"}
-    };
+    Files file = new Files();
+    DefaultTableModel groupTableModel = new DefaultTableModel();
+    Shop shop = new Shop(); setUp setUp = new setUp();
+    File groups = new File("groups.txt");
 
     public static void main(String[] args) {
         new productGroupsFrame();
     }
     productGroupsFrame(){
+        setUp.database(shop);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(1000, 1000));
+        frame.setPreferredSize(new Dimension(1000, 800));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 
@@ -39,15 +36,7 @@ public class productGroupsFrame extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    void createTxtGroups(String newGroupName){
-        try {
-            FileWriter writer = new FileWriter("groups.txt", true);
-            writer.write(newGroupName + "\n");
-            writer.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+
     void setupGroups() {
         JPanel searchPanel = new JPanel();
         JTextField searchField = new JTextField(20);
@@ -70,12 +59,16 @@ public class productGroupsFrame extends JFrame {
 
         panel.add(searchPanel);
 
-        String[] columnNames = {"№", "Назва групи", "Опис"};
-        DefaultTableModel tableModel = new DefaultTableModel(groups, columnNames);
+        groupTableModel = new DefaultTableModel();
+        groupTableModel.addColumn("№");
+        groupTableModel.addColumn("Назва групи");
+        groupTableModel.addColumn("Опис групи");
+        groupTable = new JTable(groupTableModel);
 
-        groupTable = new JTable(tableModel);
+
         groupTable.setPreferredSize(new Dimension(800, 600));
         panel.add(groupTable);
+        setUpGroups();
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -99,9 +92,10 @@ public class productGroupsFrame extends JFrame {
                 if (result == JOptionPane.OK_OPTION) {
                     String groupName = groupNameField.getText();
                     String groupDescription = groupDescriptionArea.getText();
+                    shop.addGroup(new Group(groupName,groupDescription));
                     DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
                     tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, groupName, groupDescription});
-                    createTxtGroups(groupName);
+                    file.createTxtGroups(groupName,groups);
                     JOptionPane.showMessageDialog(frame, "Групу товарів було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
@@ -135,6 +129,14 @@ public class productGroupsFrame extends JFrame {
                 if (result == JOptionPane.OK_OPTION) {
                     String editedGroupName = groupNameField.getText();
                     String editedGroupDescription = groupDescriptionArea.getText();
+
+                    for (Group group : shop.getGroups()) {
+                        if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
+                            group.setName(editedGroupName); group.setDescription(editedGroupDescription);
+                            file.editTxtGroups(editedGroupName,groupName,groups);
+                            break;
+                        }
+                    }
                     groupTable.setValueAt(editedGroupName, selectedRow, 1);
                     groupTable.setValueAt(editedGroupDescription, selectedRow, 2);
                     JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
@@ -152,13 +154,34 @@ public class productGroupsFrame extends JFrame {
                     return;
                 }
                 if (selectedRow >= 0) {
-                    DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
-                    tableModel.removeRow(selectedRow);
+                    String groupName = (String) groupTable.getValueAt(selectedRow, 1);
+                    String groupDescription = (String) groupTable.getValueAt(selectedRow, 2);
+                    Group toDelete = null;
+                    for (Group group : shop.getGroups()) {
+                        if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
+                            toDelete = group;
+                            break;
+                        }
+                    }
+                    if (toDelete != null) {
+                        shop.deleteGroup(toDelete);
+                        DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
+                        tableModel.removeRow(selectedRow);
+                    }
                 }
             }
         });
         buttonPanel.add(delete);
 
         panel.add(buttonPanel);
+    }
+    private void setUpGroups(){
+        file.clearTxtFile(groups);
+        int count=1;
+        for (Group group : shop.getGroups()) {
+            file.createTxtGroups(group.getName(),groups);
+            groupTableModel.addRow(new Object[]{count, group.getName(), group.getDescription()});
+            count++;
+        }
     }
 }

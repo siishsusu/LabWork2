@@ -4,9 +4,16 @@ public class Group {
     private String name;
     private String description;
 
+    @Override
+    public String toString() {
+        return "Назва групи = " + name + '\'' +
+                ", опис=" + description;
+    }
+
     Group(String name, String description){
         this.name=name;
         this.description=description;
+        this.products = new ArrayList<>();
     }
     private ArrayList<Product> products;
     public void addProduct(Product product){

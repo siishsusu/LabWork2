@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainScreen extends JFrame{
-    static int BUTTON_COUNT = 5, BUTTON_WIDTH=150, BUTTON_HEIGHT=30;
-    private String[] buttonNames = {"Головна", "Всі товари", "Групи товарів", "Товари по групам", "Пошук"};
     JPanel panel = new JPanel();
     JFrame frame = new JFrame("Магазин");
 
@@ -15,7 +13,7 @@ public class MainScreen extends JFrame{
 
     public MainScreen() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(1000, 1000));
+        frame.setPreferredSize(new Dimension(1000, 800));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 

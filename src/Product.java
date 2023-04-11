@@ -50,6 +50,6 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-    public double priceForAll(){return getPrice() * getAmount();}
+    public double priceForAll(Product product){return getPrice() * getAmount();}
 }
 

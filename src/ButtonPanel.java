@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ButtonPanel extends JPanel{
-    static int BUTTON_COUNT = 5, BUTTON_WIDTH=150, BUTTON_HEIGHT=30;
-    private String[] buttonNames = {"Головна", "Всі товари", "Групи товарів", "Товари по групам", "Пошук"};
+    static int BUTTON_COUNT = 3, BUTTON_WIDTH=150, BUTTON_HEIGHT=30;
+    private String[] buttonNames = {"Головна", "Групи товарів", "Товари по групам"};
     ButtonPanel(){
         super();
         buttonsPanel();

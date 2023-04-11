@@ -8,16 +8,13 @@ public class ButtonPanel extends JPanel{
     private String[] buttonNames = {"Головна", "Всі товари", "Групи товарів", "Товари по групам", "Пошук"};
     ButtonPanel(){
         super();
-        buttonsPanel(this);
+        buttonsPanel();
     }
-    public void buttonsPanel(JPanel panel) {
+    public JPanel buttonsPanel() {
         JPanel menuPanel = new JPanel();
         for (int i = 0; i < BUTTON_COUNT; i++) {
             JButton button = new JButton(buttonNames[i]);
             button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-            menuPanel.setVisible(true);
-            menuPanel.add(button);
-            panel.add(menuPanel);
             if (i == 0) {
                 button.addActionListener(new ActionListener() {
                     @Override
@@ -56,7 +53,8 @@ public class ButtonPanel extends JPanel{
                     }
                 });
 
-            }
+            }add(button);
         }
+        return menuPanel;
     }
 }

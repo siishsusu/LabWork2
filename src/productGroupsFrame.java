@@ -28,6 +28,10 @@ public class productGroupsFrame extends JFrame {
         frame.setPreferredSize(new Dimension(1000, 1000));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
+
+        ButtonPanel menu = new ButtonPanel();
+        frame.add(menu, BorderLayout.NORTH);
+
         panel.setBackground(new Color(125,155,125));
         setupGroups();
         frame.add(panel);

@@ -65,9 +65,9 @@ public class productGroupsFrame extends JFrame {
         groupTableModel.addColumn("Опис групи");
         groupTable = new JTable(groupTableModel);
 
-
-        groupTable.setPreferredSize(new Dimension(800, 600));
-        panel.add(groupTable);
+        JScrollPane scrollPane = new JScrollPane(groupTable);
+        scrollPane.setPreferredSize(new Dimension(800, 600));
+        panel.add(scrollPane);
         setUpGroups();
 
         JPanel buttonPanel = new JPanel();
@@ -125,7 +125,7 @@ public class productGroupsFrame extends JFrame {
                 editPanel.add(new JLabel("Опис групи:"));
                 editPanel.add(scrollPane);
 
-                int result = JOptionPane.showConfirmDialog(frame, editPanel, "Редагування групи товарів", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(frame, editPanel, "Редагування товару", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     String editedGroupName = groupNameField.getText();
                     String editedGroupDescription = groupDescriptionArea.getText();
@@ -139,7 +139,7 @@ public class productGroupsFrame extends JFrame {
                     }
                     groupTable.setValueAt(editedGroupName, selectedRow, 1);
                     groupTable.setValueAt(editedGroupDescription, selectedRow, 2);
-                    JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Товар було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -165,6 +165,10 @@ public class productGroupsFrame extends JFrame {
                     }
                     if (toDelete != null) {
                         shop.deleteGroup(toDelete);
+                        file.clearTxtFile(groups);
+                        for (Group group : shop.getGroups()) {
+                            file.createTxtGroups(group.getName(), groups);
+                        }
                         DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
                         tableModel.removeRow(selectedRow);
                     }

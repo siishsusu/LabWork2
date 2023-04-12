@@ -19,6 +19,7 @@ public class ButtonPanel extends JPanel{
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        MainScreen main = new MainScreen();
                         System.out.println("button1");
                     }
                 });
@@ -26,6 +27,7 @@ public class ButtonPanel extends JPanel{
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        productGroupsFrame pr = new productGroupsFrame();
                         System.out.println("button2");
                     }
                 });
@@ -33,7 +35,7 @@ public class ButtonPanel extends JPanel{
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        productGroupsFrame pr = new productGroupsFrame();
+                        productsFrame products = new productsFrame();
                         System.out.println("button3");
                     }
                 });

@@ -75,9 +75,9 @@ public class productsFrame extends JFrame {
         productTableModel.addColumn("Вартість");
         productTable = new JTable(productTableModel);
 
-
-        productTable.setPreferredSize(new Dimension(800, 600));
-        panel.add(productTable);
+        JScrollPane scrollPane = new JScrollPane(productTable);
+        scrollPane.setPreferredSize(new Dimension(800, 600));
+        panel.add(scrollPane);
         groupSelector.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -141,35 +141,87 @@ public class productsFrame extends JFrame {
                     JOptionPane.showMessageDialog(frame, "Ви не обрали жодної групи.", "Помилка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                String groupName = (String) productTable.getValueAt(selectedRow, 1);
-                String groupDescription = (String) productTable.getValueAt(selectedRow, 2);
+                String productName = (String) productTable.getValueAt(selectedRow, 1);
+                String productDescription = (String) productTable.getValueAt(selectedRow, 2);
+                String productManufacture = (String) productTable.getValueAt(selectedRow, 3);
+                double productAmount = (double) productTable.getValueAt(selectedRow, 4);
+                double productPrice = (double) productTable.getValueAt(selectedRow, 5);
 
-                JTextField groupNameField = new JTextField(groupName);
-                JTextArea groupDescriptionArea = new JTextArea(groupDescription);
-                JScrollPane scrollPane = new JScrollPane(groupDescriptionArea);
-                scrollPane.setPreferredSize(new Dimension(250, 80));
+                JTextField productNameField = new JTextField();
+                JTextArea productDescriptionArea = new JTextArea();
+                productDescriptionArea.setText(productDescription);
+                JTextArea productManufactureField = new JTextArea();
+                JTextArea productAmountField = new JTextArea();
+                JTextArea productPriceField = new JTextArea();
+                JScrollPane scrollPane = new JScrollPane(productDescriptionArea);
+                scrollPane.setPreferredSize(new Dimension(250, 50));
 
                 JPanel editPanel = new JPanel();
                 editPanel.setLayout(new GridLayout(0, 2, 5, 5));
-                editPanel.add(new JLabel("Назва групи:"));
-                editPanel.add(groupNameField);
-                editPanel.add(new JLabel("Опис групи:"));
+                editPanel.add(new JLabel("Назва товару:"));
+                productNameField.setText(productName);
+                editPanel.add(productNameField);
+                editPanel.add(new JLabel("Опис товару:"));
                 editPanel.add(scrollPane);
+                editPanel.add(new JLabel("Виробник:"));
+                productManufactureField.setText(productManufacture);
+                editPanel.add(productManufactureField);
+                editPanel.add(new JLabel("Кількість:"));
+                productAmountField.setText(String.valueOf(productAmount));
+                editPanel.add(productAmountField);
+                editPanel.add(new JLabel("Ціна за одиницю:"));
+                productPriceField.setText(String.valueOf(productPrice));
+                editPanel.add(productPriceField);
 
-                int result = JOptionPane.showConfirmDialog(frame, editPanel, "Редагування групи товарів", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(frame, editPanel, "Редагування товару", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    String editedGroupName = groupNameField.getText();
-                    String editedGroupDescription = groupDescriptionArea.getText();
+                    String editedProductName = productNameField.getText();
+                    String editedProductDescription = productDescriptionArea.getText();
+                    String editedProductManufacture = productManufactureField.getText();
+                    double editedProductAmount = Double.parseDouble(productAmountField.getText());
+                    double editedProductPrice = Double.parseDouble(productPriceField.getText());
+                    double editedProductPriceForAll = editedProductPrice*editedProductAmount;
 
-                    for (Group group : shop.getGroups()) {
-                        if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
-                            group.setName(editedGroupName); group.setDescription(editedGroupDescription);
-                            //file.editTxtGroups(editedGroupName,groupName);
-                            break;
+                    if(!groupName.equals("Всі товари")){
+                        for (Group group : shop.getGroups()) {
+                            if(group.getName().equals(groupName)) {
+                                for (Product product : group.getProducts()) {
+                                    if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
+                                            product.getManufacturer().equals(productManufacture) &&
+                                            product.getAmount() == productAmount && product.getPrice() == productPrice) {
+                                        product.setName(editedProductName);
+                                        product.setDescription(editedProductDescription);
+                                        product.setManufacturer(editedProductManufacture);
+                                        product.setAmount(editedProductAmount);
+                                        product.setPrice(editedProductPrice);
+                                        file.editTxtProducts(editedProductName, productName, new File(groupName + ".txt"));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        for (Group group : shop.getGroups()) {
+                            for (Product product : group.getProducts()) {
+                                if (product.getName().equals(productName) && product.getDescription().equals(productDescription)&&
+                                        product.getManufacturer().equals(productManufacture)&&
+                                        product.getAmount()==productAmount&&product.getPrice()==productPrice) {
+                                    product.setName(editedProductName); product.setDescription(editedProductDescription);
+                                    product.setManufacturer(editedProductManufacture); product.setAmount(editedProductAmount);
+                                    product.setPrice(editedProductPrice);
+                                    file.editTxtProducts(editedProductName, productName, new File(group.getName() + ".txt"));
+                                    break;
+                                }
+                            }
                         }
                     }
-                    productTable.setValueAt(editedGroupName, selectedRow, 1);
-                    productTable.setValueAt(editedGroupDescription, selectedRow, 2);
+                    productTable.setValueAt(editedProductName, selectedRow, 1);
+                    productTable.setValueAt(editedProductDescription, selectedRow, 2);
+                    productTable.setValueAt(editedProductManufacture, selectedRow, 3);
+                    productTable.setValueAt(editedProductAmount, selectedRow, 4);
+                    productTable.setValueAt(editedProductPrice, selectedRow, 5);
+                    productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
+
                     JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
@@ -185,17 +237,47 @@ public class productsFrame extends JFrame {
                     return;
                 }
                 if (selectedRow >= 0) {
-                    String groupName = (String) productTable.getValueAt(selectedRow, 1);
-                    String groupDescription = (String) productTable.getValueAt(selectedRow, 2);
-                    Group toDelete = null;
-                    for (Group group : shop.getGroups()) {
-                        if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
-                            toDelete = group;
-                            break;
+                    String productName = (String) productTable.getValueAt(selectedRow, 1);
+                    String productDescription = (String) productTable.getValueAt(selectedRow, 2);
+                    String productManufacture = (String) productTable.getValueAt(selectedRow, 3);
+                    double productAmount = (double) productTable.getValueAt(selectedRow, 4);
+                    double productPrice = (double) productTable.getValueAt(selectedRow, 5);
+
+                    Product toDelete = null;
+                    Group deleteFromWhere = null;
+                    if(!groupName.equals("Всі товари")) {
+                        for (Group group : shop.getGroups()) {
+                            if (group.getName().equals(groupName)) {
+                                for (Product product : group.getProducts()) {
+                                    if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
+                                            product.getManufacturer().equals(productManufacture) &&
+                                            product.getAmount() == productAmount && product.getPrice() == productPrice) {
+                                        toDelete = product;
+                                        deleteFromWhere = group;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        for (Group group : shop.getGroups()) {
+                            for (Product product : group.getProducts()) {
+                                if (product.getName().equals(productName) && product.getDescription().equals(productDescription)&&
+                                        product.getManufacturer().equals(productManufacture)&&
+                                        product.getAmount()==productAmount&&product.getPrice()==productPrice) {
+                                    toDelete = product;
+                                    deleteFromWhere = group;
+                                    break;
+                                }
+                            }
                         }
                     }
                     if (toDelete != null) {
-                        shop.deleteGroup(toDelete);
+                        deleteFromWhere.deleteProduct(toDelete);
+                        file.clearTxtFile(new File(deleteFromWhere.getName()+".txt"));
+                        for (Product product : deleteFromWhere.getProducts()) {
+                            file.createTxtProducts(product.getName(), new File(deleteFromWhere.getName()+".txt"));
+                        }
                         DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
                         tableModel.removeRow(selectedRow);
                     }
@@ -225,6 +307,7 @@ public class productsFrame extends JFrame {
             int count = 1;
             for (Group group : shop.getGroups()) {
                     for (Product product : group.getProducts()) {
+                        file.createTxtProducts(product.getName(),new File(group.getName()+".txt"));
                         productTableModel.addRow(new Object[]{count, product.getName(), product.getDescription(), product.getManufacturer(),
                                 product.getAmount(), product.getPrice(), product.priceForAll(product)});
                         count++;

@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 public class ButtonPanel extends JPanel{
     static int BUTTON_COUNT = 3, BUTTON_WIDTH=150, BUTTON_HEIGHT=30;
     private String[] buttonNames = {"Головна", "Групи товарів", "Товари по групам"};
-    ButtonPanel(){
+    ButtonPanel(final JFrame frameOld){
         super();
-        buttonsPanel();
+        buttonsPanel(frameOld);
     }
-    public JPanel buttonsPanel() {
+    public JPanel buttonsPanel(final JFrame frameOld) {
         JPanel menuPanel = new JPanel();
         for (int i = 0; i < BUTTON_COUNT; i++) {
             JButton button = new JButton(buttonNames[i]);
@@ -20,6 +20,8 @@ public class ButtonPanel extends JPanel{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainScreen main = new MainScreen();
+                        frameOld.setVisible(false);
+                        frameOld.dispose();
                         System.out.println("button1");
                     }
                 });
@@ -28,6 +30,8 @@ public class ButtonPanel extends JPanel{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         productGroupsFrame pr = new productGroupsFrame();
+                        frameOld.setVisible(false);
+                        frameOld.dispose();
                         System.out.println("button2");
                     }
                 });
@@ -36,6 +40,8 @@ public class ButtonPanel extends JPanel{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         productsFrame products = new productsFrame();
+                        frameOld.setVisible(false);
+                        frameOld.dispose();
                         System.out.println("button3");
                     }
                 });

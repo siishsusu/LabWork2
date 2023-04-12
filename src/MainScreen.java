@@ -17,7 +17,7 @@ public class MainScreen extends JFrame{
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 
-        ButtonPanel menu = new ButtonPanel();
+        ButtonPanel menu = new ButtonPanel(frame);
         frame.add(menu, BorderLayout.NORTH);
 
         panel.setBackground(new Color(125,155,125));

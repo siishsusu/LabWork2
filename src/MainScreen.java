@@ -2,8 +2,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+/*
+Автоматизоване робоче місце.
+Необхідно автоматизувати роботу невеликого підприємства по роботі з складом.
+Існує декілька груп товарів (наприклад: Продовольчі, непродовольчі...).
+В кожній групі товарів існують конкретні товари (наприклад: борошно, гречка ...).
+У кожного товару є наступні властивості - назва, опис,
+виробник, кількість на складі, ціна за одиницю. Група товарів містить наступні властивості - назва, опис.
+Реалізувати:
 
-public class MainScreen extends JFrame{
+Реалізувати графічний інтерфейс користувача
+Збереження даних в файл/файли. Один з варіантів:
+ Існує файл в якому знаходяться назви всіх груп товарів. Товари з кожної групи товарів знаходяться в окремому файлі.
+Назва товару - унікальна
+ (не може зустрічатися більше в жодній групі товарів).
+Назва групи товарів - унікальна.
+Реалізувати додавання/редагування/видалення групи
+ товарів - при видаленні групи товарів, видаляти і всі товари.
+Реалізувати додавання/редагування/видалення товару в
+групу товарів (мається на увазі назва, опис, виробник, ціна за одиницю).
+Реалізувати інтерфейс додавання товару (прийшло на склад
+ крупи гречаної - 10 штук), інтерфейс списання товару (продали крупи гречаної - 5 шт.)
+Пошук товару.
+Вивід статистичних даних: вивід всіх товарів з інформацією
+по складу, вивід усіх товарів по групі товарів з інформацією,
+загальна вартість товару на складі (кількість * на ціну), загальна вартість товарів в групі товарів.
+До роботи додати звіт про виконання роботи з описом розподілу ролей.*/
+public class MainScreen {
     JPanel panel = new JPanel();
     JFrame frame = new JFrame("Магазин");
 
@@ -15,7 +40,7 @@ public class MainScreen extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(null);
 
         ButtonPanel menu = new ButtonPanel(frame);
         frame.add(menu, BorderLayout.NORTH);
@@ -28,53 +53,5 @@ public class MainScreen extends JFrame{
         frame.setVisible(true);
 
     }
-//    public void buttonsPanel() {
-//        for (int i = 0; i < BUTTON_COUNT; i++) {
-//            JButton button = new JButton(buttonNames[i]);
-//            button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-//            if (i == 0) {
-//                button.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        System.out.println("button1");
-//                    }
-//                });
-//            }else if (i == 1) {
-//                button.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        System.out.println("button2");
-//                    }
-//                });
-//            }else if (i == 2) {
-//                button.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        productGroupsFrame pr = new productGroupsFrame();
-//                        System.out.println("button3");
-//                    }
-//                });
-//            } else if(i==3){
-//                button.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        System.out.println("button4");
-//                    }
-//                });
-//
-//            }else {
-//                button.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        System.out.println("button5");
-//                    }
-//                });
-//
-//            }
-//            panel.add(button,BorderLayout.SOUTH);
-//            frame.add(panel);
-//            frame.pack();
-//            frame.setVisible(true);
-//        }
-//    }
+
 }

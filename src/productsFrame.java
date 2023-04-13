@@ -8,8 +8,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public class productsFrame extends JFrame {
-    JFrame frame = new JFrame("Товари по групам"); JPanel panel = new JPanel();
-    JButton add = new JButton("Додати товар"), edit = new JButton("Редагувати товар"), delete = new JButton("Видалити товар");
+    JFrame frame = new JFrame("Товари по групам");
+    JPanel panel = new JPanel();
+    JButton add = new JButton("Додати товар"),edit = new JButton("Редагувати товар"), delete = new JButton("Видалити товар");
     JTable productTable;
     Files file = new Files();
     DefaultTableModel productTableModel = new DefaultTableModel();

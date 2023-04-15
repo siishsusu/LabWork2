@@ -320,6 +320,10 @@ public class productsFrame extends JFrame {
                 if (result == JOptionPane.OK_OPTION) {
                     double editedProductAmount = Double.parseDouble(productAmountField.getText());
                     double editedProductPriceForAll = productPrice *( editedProductAmount+productAmount);
+                    if (editedProductAmount<1){
+                        JOptionPane.showMessageDialog(frame, "Товару не може бути привезено менше 1", "Помилка", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                         for (Group group : shop.getGroups()) {
                             if (group.getName().equals(groupName)) {
@@ -371,6 +375,14 @@ public class productsFrame extends JFrame {
                 if (result == JOptionPane.OK_OPTION) {
                     double editedProductAmount = Double.parseDouble(productAmountField.getText());
                     double editedProductPriceForAll = productPrice *( productAmount-editedProductAmount);
+                    if (editedProductAmount>productAmount){
+                        JOptionPane.showMessageDialog(frame, "Товару не може бути продано більше, ніж є на складі", "Помилка", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (editedProductAmount<1){
+                        JOptionPane.showMessageDialog(frame, "Товару не може бути продано менше 1", "Помилка", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                     for (Group group : shop.getGroups()) {
                         if (group.getName().equals(groupName)) {

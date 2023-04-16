@@ -26,7 +26,7 @@ public class productsFrame extends JFrame {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 
-        ButtonPanel menu = new ButtonPanel(frame);
+        ButtonPanel menu = new ButtonPanel(frame,shop);
         frame.add(menu, BorderLayout.NORTH);
 
         panel.setBackground(new Color(125, 155, 125));

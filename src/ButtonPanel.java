@@ -7,9 +7,9 @@ public class ButtonPanel extends JPanel{
     Shop shop = new Shop(); setUp setUp = new setUp();
     static int BUTTON_COUNT = 3, BUTTON_WIDTH=150, BUTTON_HEIGHT=30;
     private String[] buttonNames = {"Головна", "Групи товарів", "Товари по групам"};
-    ButtonPanel(final JFrame frameOld){
+    ButtonPanel(final JFrame frameOld, Shop shop){
         super();
-        setUp.database(shop);
+        this.shop=shop;
         buttonsPanel(frameOld);
     }
     public JPanel buttonsPanel(final JFrame frameOld) {

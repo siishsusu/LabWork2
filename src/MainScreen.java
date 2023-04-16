@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 /*
 Автоматизоване робоче місце.
 Необхідно автоматизувати роботу невеликого підприємства по роботі з складом.
@@ -31,6 +29,7 @@ import java.awt.event.ActionListener;
 public class MainScreen {
     JPanel panel = new JPanel();
     JFrame frame = new JFrame("Магазин");
+    Shop shop = new Shop(); setUp setUp = new setUp();
 
     public static void main(String[] args) {
         new MainScreen();
@@ -42,7 +41,8 @@ public class MainScreen {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         frame.setLocationRelativeTo(null);
 
-        ButtonPanel menu = new ButtonPanel(frame);
+        setUp.database(shop);
+        ButtonPanel menu = new ButtonPanel(frame, shop);
         frame.add(menu, BorderLayout.NORTH);
 
         panel.setBackground(new Color(125,155,125));

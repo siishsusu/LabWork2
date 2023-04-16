@@ -118,11 +118,10 @@ public class productsFrame extends JFrame {
                     String productName = productNameField.getText();
                     String productDescription = productDescriptionArea.getText();
                     String productManufacture = productManufactureField.getText();
-                    int productAmount = Integer.parseInt(productAmountField.getText());
+                    double productAmount = Integer.parseInt(productAmountField.getText());
                     double productPrice = Double.parseDouble(productPriceField.getText());
                     double productPriceForAll = productPrice * productAmount;
                     boolean isUnique = shop.isUniqueProduct(productName);
-                    System.out.println(isUnique);
                     if(isUnique==true){
                         boolean added = shop.getOneGroup(groupName).addProduct(new Product(productName, productDescription, productManufacture, productAmount, productPrice));
                         if(added==true) {
@@ -192,7 +191,7 @@ public class productsFrame extends JFrame {
                     double editedProductPriceForAll = editedProductPrice * editedProductAmount;
 
                     boolean isUnique = shop.isUniqueProduct(editedProductName);
-                    if(isUnique==true){
+                    if(isUnique==true||editedProductName.equalsIgnoreCase(productName)){
                     if (!groupName.equals("Всі товари")) {
                         for (Group group : shop.getGroups()) {
                             if (group.getName().equals(groupName)) {

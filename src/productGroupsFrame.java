@@ -34,11 +34,6 @@ public class productGroupsFrame extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    Shop refreshShop(){
-        Shop refreshed = shop;
-        System.out.println(256);
-        return refreshed;
-    }
 
     void setupGroups() {
         JPanel searchPanel = new JPanel();
@@ -139,10 +134,9 @@ public class productGroupsFrame extends JFrame {
                     String editedGroupName = groupNameField.getText();
                     String editedGroupDescription = groupDescriptionArea.getText();
                     boolean isUnique = shop.isUniqueGroup(editedGroupName);
-                    if(isUnique==true) {
+                    if(isUnique==true||editedGroupName.equalsIgnoreCase(groupName)) {
                     for (Group group : shop.getGroups()) {
                         if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
-
                                 group.setName(editedGroupName);
                                 group.setDescription(editedGroupDescription);
                                 file.editTxtGroups(editedGroupName, groupName, groups);

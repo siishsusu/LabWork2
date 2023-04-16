@@ -10,6 +10,31 @@ public class Shop {
     public void addGroup(Group group){
         groups.add(group);
     }
+    ArrayList wasDeleted = new ArrayList<>();
+    public ArrayList wasDeletedGroup(String groupName){
+        wasDeleted.add(groupName);
+        return wasDeleted;
+    }
+    public boolean isUniqueProduct(String productName){
+        boolean isntUnique = false;
+        for (Group group : getGroups()) {
+            for (Product prod : group.getProducts()) {
+                if(productName.equalsIgnoreCase(prod.getName())){
+                    isntUnique = true; break;
+                }
+            }
+        }if(isntUnique==true)return false;
+        return true;
+    }
+    public boolean isUniqueGroup(String groupName){
+        boolean isntUnique = false;
+        for (Group group : getGroups()) {
+                if(groupName.equalsIgnoreCase(group.getName())){
+                    isntUnique = true; break;
+                }
+        }if(isntUnique==true)return false;
+        return true;
+    }
     public void deleteGroup(Group group){
         groups.remove(group);
     }
@@ -22,8 +47,9 @@ public class Shop {
     public Group getOneGroup(String name){
         Group selected = null;
         for(Group group: getGroups()){
-            if(group.getName().equals(name)) selected=group;
-            break;
+            if(group.getName().equals(name)) {
+                selected=group; break;
+            }
         }return selected;
     }
 }

@@ -3,21 +3,34 @@ import java.util.ArrayList;
 public class Group {
     private String name;
     private String description;
+    Shop shop = new Shop();
 
     @Override
     public String toString() {
         return "Назва групи = " + name + '\'' +
                 ", опис=" + description;
     }
+    Group(){}
 
     Group(String name, String description){
         this.name=name;
         this.description=description;
         this.products = new ArrayList<>();
     }
-    private ArrayList<Product> products;
-    public void addProduct(Product product){
-        products.add(product);
+    private ArrayList<Product> products = new ArrayList<>();
+    public boolean addProduct(Product product) {
+        boolean alreadyAdded = false;
+        for (Product products : products) {
+            if (product.getName().equalsIgnoreCase(products.getName())) {
+                alreadyAdded = true;
+                break;
+            }
+        }
+        if (alreadyAdded == false) {
+            products.add(product);
+            return true;
+        }
+        return false;
     }
     public void deleteProduct(Product product){
         products.remove(product);

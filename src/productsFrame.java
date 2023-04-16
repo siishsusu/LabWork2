@@ -15,17 +15,12 @@ public class productsFrame extends JFrame {
     JTable productTable;
     Files file = new Files();
     DefaultTableModel productTableModel = new DefaultTableModel();
-    Shop shop = new Shop();
-    setUp setUp = new setUp();
+    Shop shop; setUp setUp = new setUp();
     JComboBox groupSelector = new JComboBox();
     String groupName;
 
-    public static void main(String[] args) {
-        new productsFrame();
-    }
-
-    productsFrame() {
-        setUp.database(shop);
+    productsFrame(Shop s) {
+        shop=s;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -91,7 +86,6 @@ public class productsFrame extends JFrame {
                 addRowsToTable(groupName);
             }
         });
-
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
@@ -127,12 +121,22 @@ public class productsFrame extends JFrame {
                     int productAmount = Integer.parseInt(productAmountField.getText());
                     double productPrice = Double.parseDouble(productPriceField.getText());
                     double productPriceForAll = productPrice * productAmount;
-                    shop.getOneGroup(groupName).addProduct(new Product(productName, productDescription, productManufacture, productAmount, productPrice));
-                    DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
-                    tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, productName, productDescription, productManufacture,
-                            productAmount, productPrice, productPriceForAll});
-                    file.createTxtProducts(productName, new File(groupName + ".txt"));
-                    JOptionPane.showMessageDialog(frame, "Товар було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                    boolean isUnique = shop.isUniqueProduct(productName);
+                    System.out.println(isUnique);
+                    if(isUnique==true){
+                        boolean added = shop.getOneGroup(groupName).addProduct(new Product(productName, productDescription, productManufacture, productAmount, productPrice));
+                        if(added==true) {
+                            DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
+                            tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, productName, productDescription, productManufacture,
+                                    productAmount, productPrice, productPriceForAll});
+                            file.createTxtProducts(productName, new File(groupName + ".txt"));
+                            JOptionPane.showMessageDialog(frame, "Товар було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                        }else {
+                            JOptionPane.showMessageDialog(frame, "Товар не було додано, бо він уже наявний", "Помилка", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(frame, "Товар не було додано, бо його назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         });
@@ -143,7 +147,7 @@ public class productsFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = productTable.getSelectedRow();
                 if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(frame, "Ви не обрали жодної групи.", "Помилка", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Ви не обрали жодного товару.", "Помилка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 String productName = (String) productTable.getValueAt(selectedRow, 1);
@@ -187,6 +191,8 @@ public class productsFrame extends JFrame {
                     double editedProductPrice = Double.parseDouble(productPriceField.getText());
                     double editedProductPriceForAll = editedProductPrice * editedProductAmount;
 
+                    boolean isUnique = shop.isUniqueProduct(editedProductName);
+                    if(isUnique==true){
                     if (!groupName.equals("Всі товари")) {
                         for (Group group : shop.getGroups()) {
                             if (group.getName().equals(groupName)) {
@@ -194,13 +200,13 @@ public class productsFrame extends JFrame {
                                     if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
                                             product.getManufacturer().equals(productManufacture) &&
                                             product.getAmount() == productAmount && product.getPrice() == productPrice) {
-                                        product.setName(editedProductName);
-                                        product.setDescription(editedProductDescription);
-                                        product.setManufacturer(editedProductManufacture);
-                                        product.setAmount(editedProductAmount);
-                                        product.setPrice(editedProductPrice);
-                                        file.editTxtProducts(editedProductName, productName, new File(groupName + ".txt"));
-                                        break;
+                                            product.setName(editedProductName);
+                                            product.setDescription(editedProductDescription);
+                                            product.setManufacturer(editedProductManufacture);
+                                            product.setAmount(editedProductAmount);
+                                            product.setPrice(editedProductPrice);
+                                            file.editTxtProducts(editedProductName, productName, new File(groupName + ".txt"));
+                                            break;
                                     }
                                 }
                             }
@@ -230,6 +236,9 @@ public class productsFrame extends JFrame {
                     productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
 
                     JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(frame, "Товар не було відредаговано, бо його назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         });

@@ -35,6 +35,13 @@ public class Shop {
         }if(isntUnique==true)return false;
         return true;
     }
+    public double totalCost(Group group) {
+        double sum = 0;
+        for (Product products : group.getProducts()) {
+            sum+=products.priceForAll(products);
+        }
+        return sum;
+    }
     public void deleteGroup(Group group){
         groups.remove(group);
     }

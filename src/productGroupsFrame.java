@@ -66,6 +66,7 @@ public class productGroupsFrame extends JFrame {
         groupTableModel.addColumn("№");
         groupTableModel.addColumn("Назва групи");
         groupTableModel.addColumn("Опис групи");
+        groupTableModel.addColumn("Загальна вартість товарів групи");
         groupTable = new JTable(groupTableModel);
 
         JScrollPane scrollPane = new JScrollPane(groupTable);
@@ -199,7 +200,7 @@ public class productGroupsFrame extends JFrame {
         int count=1;
         for (Group group : shop.getGroups()) {
             file.createTxtGroups(group.getName(),groups);
-            groupTableModel.addRow(new Object[]{count, group.getName(), group.getDescription()});
+            groupTableModel.addRow(new Object[]{count, group.getName(), group.getDescription(), shop.totalCost(group)});
             count++;
         }
     }

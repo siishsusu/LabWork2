@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class productsFrame extends JFrame {
     JFrame frame = new JFrame("Товари по групам");
@@ -15,7 +16,8 @@ public class productsFrame extends JFrame {
     JTable productTable;
     Files file = new Files();
     DefaultTableModel productTableModel = new DefaultTableModel();
-    Shop shop; setUp setUp = new setUp();
+    Shop shop;
+    setUp setUp = new setUp();
     JComboBox groupSelector = new JComboBox();
     String groupName;
 
@@ -28,8 +30,12 @@ public class productsFrame extends JFrame {
 
         ButtonPanel menu = new ButtonPanel(frame,shop);
         frame.add(menu, BorderLayout.NORTH);
-
-        panel.setBackground(new Color(125, 155, 125));
+        try {
+            panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //panel.setBackground(new Color(125, 155, 125));
         setupGroups();
         frame.add(panel);
         frame.pack();
@@ -43,6 +49,7 @@ public class productsFrame extends JFrame {
         groupSelector.addItem("Всі товари");
         for (Group group : shop.getGroups()) {
             groupSelector.addItem(group.getName());
+
         }
         searchPanel.add(groupSelector);
         JTextField searchField = new JTextField(20);
@@ -76,6 +83,9 @@ public class productsFrame extends JFrame {
         productTable = new JTable(productTableModel);
 
         JScrollPane scrollPane = new JScrollPane(productTable);
+        if (productTable.getRowHeight(1) < getPreferredSize().height) {
+            productTable.setRowHeight(1, getPreferredSize().height);
+        }
         scrollPane.setPreferredSize(new Dimension(800, 600));
         panel.add(scrollPane);
         groupSelector.addActionListener(new ActionListener() {
@@ -131,6 +141,7 @@ public class productsFrame extends JFrame {
                             file.createTxtProducts(productName, new File(groupName + ".txt"));
                             JOptionPane.showMessageDialog(frame, "Товар було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                         }else {
+
                             JOptionPane.showMessageDialog(frame, "Товар не було додано, бо він уже наявний", "Помилка", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }else{
@@ -139,6 +150,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        add.setBackground(new Color(125, 104, 80));
+        add.setForeground(Color.WHITE);
+        add.setFocusPainted(false);
+        add.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(add);
 
         edit.addActionListener(new ActionListener() {
@@ -241,6 +256,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        edit.setBackground(new Color(125, 104, 80));
+        edit.setForeground(Color.WHITE);
+        edit.setFocusPainted(false);
+        edit.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(edit);
 
         delete.addActionListener(new ActionListener() {
@@ -299,6 +318,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        delete.setBackground(new Color(125, 104, 80));
+        delete.setForeground(Color.WHITE);
+        delete.setFocusPainted(false);
+        delete.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(delete);
 
 
@@ -354,6 +377,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        delivered.setBackground(new Color(125, 104, 80));
+        delivered.setForeground(Color.WHITE);
+        delivered.setFocusPainted(false);
+        delivered.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(delivered);
 
 
@@ -413,6 +440,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        sold.setBackground(new Color(125, 104, 80));
+        sold.setForeground(Color.WHITE);
+        sold.setFocusPainted(false);
+        sold.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(sold);
         panel.add(buttonPanel);
 

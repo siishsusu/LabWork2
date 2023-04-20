@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class productsFrame extends JFrame {
     JFrame frame = new JFrame("Товари по групам");
@@ -15,21 +16,26 @@ public class productsFrame extends JFrame {
     JTable productTable;
     Files file = new Files();
     DefaultTableModel productTableModel = new DefaultTableModel();
-    Shop shop; setUp setUp = new setUp();
+    Shop shop;
+    setUp setUp = new setUp();
     JComboBox groupSelector = new JComboBox();
     String groupName;
 
     productsFrame(Shop s) {
-        shop=s;
+        shop = s;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 
-        ButtonPanel menu = new ButtonPanel(frame,shop);
+        ButtonPanel menu = new ButtonPanel(frame, shop);
         frame.add(menu, BorderLayout.NORTH);
-
-        panel.setBackground(new Color(125, 155, 125));
+        try {
+            panel = new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //panel.setBackground(new Color(125, 155, 125));
         setupGroups();
         frame.add(panel);
         frame.pack();
@@ -40,13 +46,21 @@ public class productsFrame extends JFrame {
     void setupGroups() {
         JPanel searchPanel = new JPanel();
         groupSelector.setBounds(50, 50, 90, 20);
+        groupSelector.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
+        groupSelector.setBackground(new Color(126, 110, 225));
+        groupSelector.setForeground(Color.WHITE);
         groupSelector.addItem("Всі товари");
         for (Group group : shop.getGroups()) {
             groupSelector.addItem(group.getName());
+
         }
         searchPanel.add(groupSelector);
         JTextField searchField = new JTextField(20);
         JButton searchButton = new JButton("Пошук");
+        searchButton.setBackground(new Color(126, 110, 225));
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setFocusPainted(false);
+        searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,8 +88,15 @@ public class productsFrame extends JFrame {
         productTableModel.addColumn("Ціна");
         productTableModel.addColumn("Вартість");
         productTable = new JTable(productTableModel);
+        productTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        productTable.getTableHeader().setBackground(new Color(106, 90, 205));
+        productTable.getTableHeader().setForeground(new Color(255, 255, 255));
+        productTable.setRowHeight(25);
 
         JScrollPane scrollPane = new JScrollPane(productTable);
+        if (productTable.getRowHeight(1) < getPreferredSize().height) {
+            productTable.setRowHeight(1, getPreferredSize().height);
+        }
         scrollPane.setPreferredSize(new Dimension(800, 600));
         panel.add(scrollPane);
         groupSelector.addActionListener(new ActionListener() {
@@ -112,33 +133,46 @@ public class productsFrame extends JFrame {
                 addPanel.add(productAmountField);
                 addPanel.add(new JLabel("Ціна за одиницю:"));
                 addPanel.add(productPriceField);
-
+                if (groupName == null || groupName.equals("Всі товари")) {
+                    JOptionPane.showMessageDialog(frame, "Ви не обрали точної групи", "Помилка", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 int result = JOptionPane.showConfirmDialog(frame, addPanel, "Додавання товарів", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     String productName = productNameField.getText();
                     String productDescription = productDescriptionArea.getText();
                     String productManufacture = productManufactureField.getText();
+                    if (productName.equals("") || productDescription.equals("") || productManufacture.equals("") || productAmountField.getText().equals("") || productPriceField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(frame, "Новий товар не було додано, бо не всі поля заповнені", "Інформація", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     double productAmount = Integer.parseInt(productAmountField.getText());
                     double productPrice = Double.parseDouble(productPriceField.getText());
                     double productPriceForAll = productPrice * productAmount;
                     boolean isUnique = shop.isUniqueProduct(productName);
-                    if(isUnique==true){
+
+                    if (isUnique == true) {
                         boolean added = shop.getOneGroup(groupName).addProduct(new Product(productName, productDescription, productManufacture, productAmount, productPrice));
-                        if(added==true) {
+                        if (added == true) {
                             DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
                             tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, productName, productDescription, productManufacture,
                                     productAmount, productPrice, productPriceForAll});
                             file.createTxtProducts(productName, new File(groupName + ".txt"));
                             JOptionPane.showMessageDialog(frame, "Товар було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
-                        }else {
+                        } else {
+
                             JOptionPane.showMessageDialog(frame, "Товар не було додано, бо він уже наявний", "Помилка", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(frame, "Товар не було додано, бо його назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         });
+        add.setBackground(new Color(106, 90, 205));
+        add.setForeground(Color.WHITE);
+        add.setFocusPainted(false);
+        add.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(add);
 
         edit.addActionListener(new ActionListener() {
@@ -189,16 +223,16 @@ public class productsFrame extends JFrame {
                     double editedProductAmount = Double.parseDouble(productAmountField.getText());
                     double editedProductPrice = Double.parseDouble(productPriceField.getText());
                     double editedProductPriceForAll = editedProductPrice * editedProductAmount;
-
                     boolean isUnique = shop.isUniqueProduct(editedProductName);
-                    if(isUnique==true||editedProductName.equalsIgnoreCase(productName)){
-                    if (!groupName.equals("Всі товари")) {
-                        for (Group group : shop.getGroups()) {
-                            if (group.getName().equals(groupName)) {
-                                for (Product product : group.getProducts()) {
-                                    if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
-                                            product.getManufacturer().equals(productManufacture) &&
-                                            product.getAmount() == productAmount && product.getPrice() == productPrice) {
+
+                    if (isUnique == true || editedProductName.equalsIgnoreCase(productName)) {
+                        if (!groupName.equals("Всі товари")) {
+                            for (Group group : shop.getGroups()) {
+                                if (group.getName().equals(groupName)) {
+                                    for (Product product : group.getProducts()) {
+                                        if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
+                                                product.getManufacturer().equals(productManufacture) &&
+                                                product.getAmount() == productAmount && product.getPrice() == productPrice) {
                                             product.setName(editedProductName);
                                             product.setDescription(editedProductDescription);
                                             product.setManufacturer(editedProductManufacture);
@@ -206,41 +240,45 @@ public class productsFrame extends JFrame {
                                             product.setPrice(editedProductPrice);
                                             file.editTxtProducts(editedProductName, productName, new File(groupName + ".txt"));
                                             break;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            for (Group group : shop.getGroups()) {
+                                for (Product product : group.getProducts()) {
+                                    if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
+                                            product.getManufacturer().equals(productManufacture) &&
+                                            product.getAmount() == productAmount && product.getPrice() == productPrice) {
+                                        product.setName(editedProductName);
+                                        product.setDescription(editedProductDescription);
+                                        product.setManufacturer(editedProductManufacture);
+                                        product.setAmount(editedProductAmount);
+                                        product.setPrice(editedProductPrice);
+                                        file.editTxtProducts(editedProductName, productName, new File(group.getName() + ".txt"));
+                                        break;
                                     }
                                 }
                             }
                         }
-                    } else {
-                        for (Group group : shop.getGroups()) {
-                            for (Product product : group.getProducts()) {
-                                if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
-                                        product.getManufacturer().equals(productManufacture) &&
-                                        product.getAmount() == productAmount && product.getPrice() == productPrice) {
-                                    product.setName(editedProductName);
-                                    product.setDescription(editedProductDescription);
-                                    product.setManufacturer(editedProductManufacture);
-                                    product.setAmount(editedProductAmount);
-                                    product.setPrice(editedProductPrice);
-                                    file.editTxtProducts(editedProductName, productName, new File(group.getName() + ".txt"));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    productTable.setValueAt(editedProductName, selectedRow, 1);
-                    productTable.setValueAt(editedProductDescription, selectedRow, 2);
-                    productTable.setValueAt(editedProductManufacture, selectedRow, 3);
-                    productTable.setValueAt(editedProductAmount, selectedRow, 4);
-                    productTable.setValueAt(editedProductPrice, selectedRow, 5);
-                    productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
+                        productTable.setValueAt(editedProductName, selectedRow, 1);
+                        productTable.setValueAt(editedProductDescription, selectedRow, 2);
+                        productTable.setValueAt(editedProductManufacture, selectedRow, 3);
+                        productTable.setValueAt(editedProductAmount, selectedRow, 4);
+                        productTable.setValueAt(editedProductPrice, selectedRow, 5);
+                        productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
 
-                    JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                        JOptionPane.showMessageDialog(frame, "Групу товарів було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
                         JOptionPane.showMessageDialog(frame, "Товар не було відредаговано, бо його назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         });
+        edit.setBackground(new Color(106, 90, 205));
+        edit.setForeground(Color.WHITE);
+        edit.setFocusPainted(false);
+        edit.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(edit);
 
         delete.addActionListener(new ActionListener() {
@@ -299,6 +337,10 @@ public class productsFrame extends JFrame {
                 }
             }
         });
+        delete.setBackground(new Color(185, 94, 80));
+        delete.setForeground(Color.WHITE);
+        delete.setFocusPainted(false);
+        delete.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(delete);
 
 
@@ -327,33 +369,37 @@ public class productsFrame extends JFrame {
                 int result = JOptionPane.showConfirmDialog(frame, deliveredPanel, "Привезли товару", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     double editedProductAmount = Double.parseDouble(productAmountField.getText());
-                    double editedProductPriceForAll = productPrice *( editedProductAmount+productAmount);
-                    if (editedProductAmount<1){
+                    double editedProductPriceForAll = productPrice * (editedProductAmount + productAmount);
+                    if (editedProductAmount < 1) {
                         JOptionPane.showMessageDialog(frame, "Товару не може бути привезено менше 1", "Помилка", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                        for (Group group : shop.getGroups()) {
-                            if (group.getName().equals(groupName)) {
-                                for (Product product : group.getProducts()) {
-                                    if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
-                                            product.getManufacturer().equals(productManufacture) &&
-                                            product.getAmount() == productAmount && product.getPrice() == productPrice) {
-                                        product.setAmount( productAmount+editedProductAmount);
-                                        file.editTxtProducts(productName, productName, new File(groupName + ".txt"));
-                                        break;
-                                    }
+                    for (Group group : shop.getGroups()) {
+                        if (group.getName().equals(groupName)) {
+                            for (Product product : group.getProducts()) {
+                                if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
+                                        product.getManufacturer().equals(productManufacture) &&
+                                        product.getAmount() == productAmount && product.getPrice() == productPrice) {
+                                    product.setAmount(productAmount + editedProductAmount);
+                                    file.editTxtProducts(productName, productName, new File(groupName + ".txt"));
+                                    break;
                                 }
                             }
                         }
+                    }
 
-                    productTable.setValueAt(productAmount+editedProductAmount, selectedRow, 4);
+                    productTable.setValueAt(productAmount + editedProductAmount, selectedRow, 4);
                     productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
 
                     JOptionPane.showMessageDialog(frame, "Товари було успішно привезено на склад.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
+        delivered.setBackground(new Color(106, 90, 205));
+        delivered.setForeground(Color.WHITE);
+        delivered.setFocusPainted(false);
+        delivered.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(delivered);
 
 
@@ -382,12 +428,12 @@ public class productsFrame extends JFrame {
                 int result = JOptionPane.showConfirmDialog(frame, deliveredPanel, "Привезли товару", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     double editedProductAmount = Double.parseDouble(productAmountField.getText());
-                    double editedProductPriceForAll = productPrice *( productAmount-editedProductAmount);
-                    if (editedProductAmount>productAmount){
+                    double editedProductPriceForAll = productPrice * (productAmount - editedProductAmount);
+                    if (editedProductAmount > productAmount) {
                         JOptionPane.showMessageDialog(frame, "Товару не може бути продано більше, ніж є на складі", "Помилка", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    if (editedProductAmount<1){
+                    if (editedProductAmount < 1) {
                         JOptionPane.showMessageDialog(frame, "Товару не може бути продано менше 1", "Помилка", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -398,7 +444,7 @@ public class productsFrame extends JFrame {
                                 if (product.getName().equals(productName) && product.getDescription().equals(productDescription) &&
                                         product.getManufacturer().equals(productManufacture) &&
                                         product.getAmount() == productAmount && product.getPrice() == productPrice) {
-                                    product.setAmount( productAmount-editedProductAmount);
+                                    product.setAmount(productAmount - editedProductAmount);
                                     file.editTxtProducts(productName, productName, new File(groupName + ".txt"));
                                     break;
                                 }
@@ -406,13 +452,17 @@ public class productsFrame extends JFrame {
                         }
                     }
 
-                    productTable.setValueAt(productAmount-editedProductAmount, selectedRow, 4);
+                    productTable.setValueAt(productAmount - editedProductAmount, selectedRow, 4);
                     productTable.setValueAt(editedProductPriceForAll, selectedRow, 6);
 
                     JOptionPane.showMessageDialog(frame, "Товари було успішно продано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
+        sold.setBackground(new Color(106, 90, 205));
+        sold.setForeground(Color.WHITE);
+        sold.setFocusPainted(false);
+        sold.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(sold);
         panel.add(buttonPanel);
 

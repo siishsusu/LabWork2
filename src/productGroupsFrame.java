@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class productGroupsFrame extends JFrame {
     JFrame frame = new JFrame("Групи товарів"); JPanel panel = new JPanel();
@@ -21,13 +22,18 @@ public class productGroupsFrame extends JFrame {
         shop=s;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
+        try {
+            panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setLocationRelativeTo(null);
 
         ButtonPanel menu = new ButtonPanel(frame,shop);
         frame.add(menu, BorderLayout.NORTH);
 
-        panel.setBackground(new Color(125,155,125));
+        //panel.setBackground(new Color(125,155,125));
         setupGroups();
         frame.add(panel);
         frame.pack();
@@ -38,7 +44,12 @@ public class productGroupsFrame extends JFrame {
     void setupGroups() {
         JPanel searchPanel = new JPanel();
         JTextField searchField = new JTextField(20);
+
         JButton searchButton = new JButton("Пошук");
+        searchButton.setBackground(new Color(126,110,225));
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setFocusPainted(false);
+        searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,13 +74,25 @@ public class productGroupsFrame extends JFrame {
         groupTableModel.addColumn("Опис групи");
         groupTableModel.addColumn("Загальна вартість товарів групи");
         groupTable = new JTable(groupTableModel);
+        //groupTable.setBackground(new Color(0,0,0,0));
+
+        groupTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        groupTable.getTableHeader().setBackground(new Color(106,90,205));
+        groupTable.getTableHeader().setForeground(new Color(255,255,255));
+        groupTable.setRowHeight(25);
 
         JScrollPane scrollPane = new JScrollPane(groupTable);
         scrollPane.setPreferredSize(new Dimension(800, 600));
         panel.add(scrollPane);
         setUpGroups();
 
-        JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel= new JPanel();
+      //  buttonPanel.setBackground(new Color(65,105,225));
+//        try {
+//            buttonPanel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         add.addActionListener(new ActionListener() {
@@ -104,6 +127,10 @@ public class productGroupsFrame extends JFrame {
                 }
             }
         });
+        add.setBackground(new Color(106,90,205));
+        add.setForeground(Color.WHITE);
+        add.setFocusPainted(false);
+        add.setFont(new Font("Tahoma", Font.BOLD, 14));
         buttonPanel.add(add);
 
         edit.addActionListener(new ActionListener() {
@@ -152,6 +179,11 @@ public class productGroupsFrame extends JFrame {
                 }
             }
         });
+        edit.setBackground(new Color(106,90,205));
+        edit.setForeground(Color.WHITE);
+        edit.setFocusPainted(false);
+        edit.setFont(new Font("Tahoma", Font.BOLD, 14));
+
         buttonPanel.add(edit);
 
         delete.addActionListener(new ActionListener() {
@@ -185,6 +217,11 @@ public class productGroupsFrame extends JFrame {
                 }
             }
         });
+        delete.setBackground(new Color(185, 94, 80));
+        delete.setForeground(Color.WHITE);
+        delete.setFocusPainted(false);
+        delete.setFont(new Font("Tahoma", Font.BOLD, 14));
+
         buttonPanel.add(delete);
 
         panel.add(buttonPanel);

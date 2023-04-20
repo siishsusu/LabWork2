@@ -24,6 +24,7 @@ public class MainScreen {
         frame.add(menu, BorderLayout.NORTH);
         try {
             panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+            panel.setLayout(new BorderLayout());
             frame.add(panel);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,7 +39,7 @@ public class MainScreen {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+//        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         frame.setLocationRelativeTo(null);
 
         ButtonPanel menu = new ButtonPanel(frame, shop1);
@@ -59,11 +60,16 @@ public class MainScreen {
     private void setMainScreen(){
         title=new JLabel();
         title.setText("Вітаємо в нашому магазині!!!");
-        title.setFont(new Font("Tahoma", Font.BOLD, 34));
+        title.setFont(new Font("Comic Sans MS", Font.BOLD, 54));
+        title.setForeground(Color.BLACK);
         title.setForeground(Color.WHITE);
-        panel.add(title);
-
-
+        panel.add(title, BorderLayout.NORTH);
+        JLabel picture1 = new JLabel();
+        picture1.setIcon(new ImageIcon("C:\\Users\\Igor\\Downloads\\500.png"));
+        picture1.setOpaque(false);
+       JPanel jPanel =new JPanel();
+       jPanel.add(picture1);
+        panel.add(jPanel, BorderLayout.CENTER);
     }
 
 }

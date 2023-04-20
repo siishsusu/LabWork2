@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ButtonPanel extends JPanel{
-    Shop shop = new Shop(); setUp setUp = new setUp();
+    Shop shop ; setUp setUp = new setUp();
     static int BUTTON_COUNT = 3, BUTTON_WIDTH=180, BUTTON_HEIGHT=30;
     private String[] buttonNames = {"Головна", "Групи товарів", "Товари по групам"};
     ButtonPanel(final JFrame frameOld, Shop shop){
@@ -27,7 +27,7 @@ public class ButtonPanel extends JPanel{
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        MainScreen main = new MainScreen();
+                        MainScreen main = new MainScreen(shop);
                         frameOld.setVisible(false);
                         frameOld.dispose();
                         System.out.println("button1");

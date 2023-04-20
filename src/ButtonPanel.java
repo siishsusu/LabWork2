@@ -30,7 +30,6 @@ public class ButtonPanel extends JPanel{
                         MainScreen main = new MainScreen(shop);
                         frameOld.setVisible(false);
                         frameOld.dispose();
-                        System.out.println("button1");
                     }
                 });
             }else if (i == 1) {
@@ -40,7 +39,6 @@ public class ButtonPanel extends JPanel{
                         productGroupsFrame pr = new productGroupsFrame(shop);
                         frameOld.setVisible(false);
                         frameOld.dispose();
-                        System.out.println("button2");
                     }
                 });
             }else if (i == 2) {
@@ -50,26 +48,10 @@ public class ButtonPanel extends JPanel{
                         productsFrame products = new productsFrame(shop);
                         frameOld.setVisible(false);
                         frameOld.dispose();
-                        System.out.println("button3");
                     }
                 });
-            } else if(i==3){
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("button4");
-                    }
-                });
-
-            }else {
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("button5");
-                    }
-                });
-
-            }add(button);
+            }
+            add(button);
         }
 
         return menuPanel;

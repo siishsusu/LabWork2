@@ -10,33 +10,33 @@ public class Files {
             ex.printStackTrace();
         }
     }
-    void createTxtGroups(String newGroupName, File file){
+    void createTxtGroups(String newGroup, File file){
         try {
             FileWriter writer = new FileWriter(file, true);
-            writer.write(newGroupName + "\n");
+            writer.write(newGroup + "\n");
             writer.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    void createTxtProducts(String newProductName, File file){
+    void createTxtProducts(String newProduct, File file){
         try {
             FileWriter writer = new FileWriter(file, true);
-            writer.write(newProductName + "\n");
+            writer.write(newProduct + "\n");
             writer.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    void editTxtGroups(String newGroupName, String oldGroupName, File file){
+    void editTxtGroups(String newGroup, String oldGroupName, File file){
         try {
             File groupsTemp = new File("groupsTemp.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             BufferedWriter writer = new BufferedWriter(new FileWriter(groupsTemp));
             String currentLine;
             while ((currentLine = reader.readLine()) != null) {
-                if (currentLine.equals(oldGroupName)) {
-                    writer.write(newGroupName + "\n");
+                if (currentLine.contains(oldGroupName)) {
+                    writer.write(newGroup + "\n");
                 } else {
                     writer.write(currentLine + "\n");
                 }
@@ -47,15 +47,15 @@ public class Files {
             ex.printStackTrace();
         }
     }
-    void editTxtProducts(String newProductName, String oldProductName, File file){
+    void editTxtProducts(String newProduct, String oldProductName, File file){
         try {
             File groupsTemp = new File("groupsTemp.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             BufferedWriter writer = new BufferedWriter(new FileWriter(groupsTemp));
             String currentLine;
             while ((currentLine = reader.readLine()) != null) {
-                if (currentLine.equals(oldProductName)) {
-                    writer.write(newProductName + "\n");
+                if (currentLine.contains(oldProductName)) {
+                    writer.write(newProduct + "\n");
                 } else {
                     writer.write(currentLine + "\n");
                 }

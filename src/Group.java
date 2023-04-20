@@ -3,12 +3,12 @@ import java.util.ArrayList;
 public class Group {
     private String name;
     private String description;
+    private double cost;
     Shop shop = new Shop();
 
-    @Override
-    public String toString() {
-        return "Назва групи = " + name + '\'' +
-                ", опис=" + description;
+    public String toString(Group group, double cost) {
+        return "Назва групи: " + name + '\'' +
+                ", опис: " + description+", загальна вартість товарів: "+cost;
     }
     Group(){}
 
@@ -62,3 +62,4 @@ public class Group {
         this.products = products;
     }
 }
+

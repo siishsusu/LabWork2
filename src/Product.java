@@ -9,7 +9,10 @@ public class Product {
         this.amount = amount;
         this.price = price;
     }
-
+    public String toString(Product product){
+        return "Назва: "+getName()+", Опис: "+getDescription()+", Виробник: "+getManufacturer()+", Кількість: "
+                +getAmount()+", Ціна за одиницю: "+getPrice()+", Загальна вартість: "+priceForAll(product);
+    }
 
     public String getName() {
         return name;
@@ -52,4 +55,5 @@ public class Product {
     }
     public double priceForAll(Product product){return getPrice() * getAmount();}
 }
+
 

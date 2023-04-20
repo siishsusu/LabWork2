@@ -13,6 +13,7 @@ public class productGroupsFrame extends JFrame {
     JButton add = new JButton("Додати групу"), edit = new JButton("Редагувати групу"), delete = new JButton("Видалити групу");
     JTable groupTable;
     Files file = new Files();
+    Group groupClass;
     DefaultTableModel groupTableModel = new DefaultTableModel();
     Shop shop;
 
@@ -23,7 +24,7 @@ public class productGroupsFrame extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
         try {
-            panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+            panel=new JPanelWithBackground("back.jpg");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +88,7 @@ public class productGroupsFrame extends JFrame {
         setUpGroups();
 
         JPanel buttonPanel= new JPanel();
-      //  buttonPanel.setBackground(new Color(65,105,225));
+        //  buttonPanel.setBackground(new Color(65,105,225));
 //        try {
 //            buttonPanel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
 //        } catch (IOException e) {
@@ -119,7 +120,7 @@ public class productGroupsFrame extends JFrame {
                         shop.addGroup(new Group(groupName,groupDescription));
                         DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
                         tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, groupName, groupDescription});
-                        file.createTxtGroups(groupName,groups);
+                        file.createTxtGroups(new Group(groupName,groupDescription).toString(new Group(groupName,groupDescription),shop.totalCost(new Group(groupName,groupDescription))),groups);
                         JOptionPane.showMessageDialog(frame, "Групу товарів було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                     }else{
                         JOptionPane.showMessageDialog(frame, "Групу товарів не було додано, бо її назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
@@ -162,17 +163,17 @@ public class productGroupsFrame extends JFrame {
                     String editedGroupDescription = groupDescriptionArea.getText();
                     boolean isUnique = shop.isUniqueGroup(editedGroupName);
                     if(isUnique==true||editedGroupName.equalsIgnoreCase(groupName)) {
-                    for (Group group : shop.getGroups()) {
-                        if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
+                        for (Group group : shop.getGroups()) {
+                            if (group.getName().equals(groupName) && group.getDescription().equals(groupDescription)) {
                                 group.setName(editedGroupName);
                                 group.setDescription(editedGroupDescription);
-                                file.editTxtGroups(editedGroupName, groupName, groups);
+                                file.editTxtGroups(group.toString(group, shop.totalCost(group)), groupName, groups);
                                 break;
+                            }
                         }
-                    }
-                    groupTable.setValueAt(editedGroupName, selectedRow, 1);
-                    groupTable.setValueAt(editedGroupDescription, selectedRow, 2);
-                    JOptionPane.showMessageDialog(frame, "Товар було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
+                        groupTable.setValueAt(editedGroupName, selectedRow, 1);
+                        groupTable.setValueAt(editedGroupDescription, selectedRow, 2);
+                        JOptionPane.showMessageDialog(frame, "Товар було успішно відредаговано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                     }else{
                         JOptionPane.showMessageDialog(frame, "Групу товарів не було відредаговано, бо її назва не унікальна", "Помилка", JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -209,7 +210,7 @@ public class productGroupsFrame extends JFrame {
                         shop.deleteGroup(toDelete);
                         file.clearTxtFile(groups);
                         for (Group group : shop.getGroups()) {
-                            file.createTxtGroups(group.getName(), groups);
+                            file.createTxtGroups(group.toString(group,shop.totalCost(group)), groups);
                         }
                         DefaultTableModel tableModel = (DefaultTableModel) groupTable.getModel();
                         tableModel.removeRow(selectedRow);
@@ -230,7 +231,7 @@ public class productGroupsFrame extends JFrame {
         file.clearTxtFile(groups);
         int count=1;
         for (Group group : shop.getGroups()) {
-            file.createTxtGroups(group.getName(),groups);
+            file.createTxtGroups(group.toString(group,shop.totalCost(group)),groups);
             groupTableModel.addRow(new Object[]{count, group.getName(), group.getDescription(), shop.totalCost(group)});
             count++;
         }

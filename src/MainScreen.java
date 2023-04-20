@@ -23,7 +23,7 @@ public class MainScreen {
         ButtonPanel menu = new ButtonPanel(frame, shop);
         frame.add(menu, BorderLayout.NORTH);
         try {
-            panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+            panel=new JPanelWithBackground("back.jpg");
             panel.setLayout(new BorderLayout());
             frame.add(panel);
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class MainScreen {
         ButtonPanel menu = new ButtonPanel(frame, shop1);
         frame.add(menu, BorderLayout.NORTH);
         try {
-            panel=new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+            panel=new JPanelWithBackground("back.jpg");
             frame.add(panel);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -65,10 +65,10 @@ public class MainScreen {
         title.setForeground(Color.WHITE);
         panel.add(title, BorderLayout.NORTH);
         JLabel picture1 = new JLabel();
-        picture1.setIcon(new ImageIcon("C:\\Users\\Igor\\Downloads\\500.png"));
+        picture1.setIcon(new ImageIcon("500.png"));
         picture1.setOpaque(false);
-       JPanel jPanel =new JPanel();
-       jPanel.add(picture1);
+        JPanel jPanel =new JPanel();
+        jPanel.add(picture1);
         panel.add(jPanel, BorderLayout.CENTER);
     }
 

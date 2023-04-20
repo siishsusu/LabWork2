@@ -14,6 +14,7 @@ public class productsFrame extends JFrame {
     JButton add = new JButton("Додати товар"), edit = new JButton("Редагувати товар"),
             delete = new JButton("Видалити товар"), delivered = new JButton("Привезли товар"), sold = new JButton("Продали товар");
     JTable productTable;
+    Product product;
     Files file = new Files();
     DefaultTableModel productTableModel = new DefaultTableModel();
     Shop shop;
@@ -31,7 +32,7 @@ public class productsFrame extends JFrame {
         ButtonPanel menu = new ButtonPanel(frame, shop);
         frame.add(menu, BorderLayout.NORTH);
         try {
-            panel = new JPanelWithBackground("C:\\Users\\Igor\\Downloads\\back.jpg");
+            panel = new JPanelWithBackground("back.jpg");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -157,7 +158,7 @@ public class productsFrame extends JFrame {
                             DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
                             tableModel.addRow(new Object[]{tableModel.getRowCount() + 1, productName, productDescription, productManufacture,
                                     productAmount, productPrice, productPriceForAll});
-                            file.createTxtProducts(productName, new File(groupName + ".txt"));
+                            file.createTxtProducts(new Product(productName, productDescription, productManufacture, productAmount, productPrice).toString(new Product(productName, productDescription, productManufacture, productAmount, productPrice)), new File(groupName + ".txt"));
                             JOptionPane.showMessageDialog(frame, "Товар було успішно додано.", "Інформація", JOptionPane.INFORMATION_MESSAGE);
                         } else {
 
@@ -238,7 +239,7 @@ public class productsFrame extends JFrame {
                                             product.setManufacturer(editedProductManufacture);
                                             product.setAmount(editedProductAmount);
                                             product.setPrice(editedProductPrice);
-                                            file.editTxtProducts(editedProductName, productName, new File(groupName + ".txt"));
+                                            file.editTxtProducts(product.toString(product), productName, new File(groupName + ".txt"));
                                             break;
                                         }
                                     }
@@ -255,7 +256,7 @@ public class productsFrame extends JFrame {
                                         product.setManufacturer(editedProductManufacture);
                                         product.setAmount(editedProductAmount);
                                         product.setPrice(editedProductPrice);
-                                        file.editTxtProducts(editedProductName, productName, new File(group.getName() + ".txt"));
+                                        file.editTxtProducts(product.toString(product), productName, new File(group.getName() + ".txt"));
                                         break;
                                     }
                                 }
@@ -329,7 +330,7 @@ public class productsFrame extends JFrame {
                         deleteFromWhere.deleteProduct(toDelete);
                         file.clearTxtFile(new File(deleteFromWhere.getName() + ".txt"));
                         for (Product product : deleteFromWhere.getProducts()) {
-                            file.createTxtProducts(product.getName(), new File(deleteFromWhere.getName() + ".txt"));
+                            file.createTxtProducts(product.toString(product), new File(deleteFromWhere.getName() + ".txt"));
                         }
                         DefaultTableModel tableModel = (DefaultTableModel) productTable.getModel();
                         tableModel.removeRow(selectedRow);
@@ -382,7 +383,7 @@ public class productsFrame extends JFrame {
                                         product.getManufacturer().equals(productManufacture) &&
                                         product.getAmount() == productAmount && product.getPrice() == productPrice) {
                                     product.setAmount(productAmount + editedProductAmount);
-                                    file.editTxtProducts(productName, productName, new File(groupName + ".txt"));
+                                    file.editTxtProducts(product.toString(product), productName, new File(groupName + ".txt"));
                                     break;
                                 }
                             }
@@ -445,7 +446,7 @@ public class productsFrame extends JFrame {
                                         product.getManufacturer().equals(productManufacture) &&
                                         product.getAmount() == productAmount && product.getPrice() == productPrice) {
                                     product.setAmount(productAmount - editedProductAmount);
-                                    file.editTxtProducts(productName, productName, new File(groupName + ".txt"));
+                                    file.editTxtProducts(product.toString(product), productName, new File(groupName + ".txt"));
                                     break;
                                 }
                             }
@@ -476,7 +477,7 @@ public class productsFrame extends JFrame {
             for (Group group : shop.getGroups()) {
                 if (group.getName().equals(groupName)) {
                     for (Product product : group.getProducts()) {
-                        file.createTxtProducts(product.getName(), new File(group.getName() + ".txt"));
+                        file.createTxtProducts(product.toString(product), new File(group.getName() + ".txt"));
                         productTableModel.addRow(new Object[]{count, product.getName(), product.getDescription(), product.getManufacturer(),
                                 product.getAmount(), product.getPrice(), product.priceForAll(product)});
                         count++;
